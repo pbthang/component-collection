@@ -5,17 +5,17 @@ template: splash
 hero:
   tagline: where I keep my reusable code snippets and other useful stuff
   image:
-    file: ../../assets/houston.webp
-    # html: <div style="color:red">Hello</div>
+    # file: ../../assets/houston.webp
+    html: <div class="text-justify font-mono text-green-500">HTML | CSS | JavaScript | TypeScript | React | TailwindCSS | Shadcn/ui | Three.js | Next.js | Vite | Astro.js | Starlight | SEO | CMS | Python | FastAPI | Node.js | Express.js | Java | C++ | Go | SQL | NoSQL | Prisma | MongoDB | Redis | | Git | GitHub | Docker | AWS | Clerk | Supabase | Firebase | OpenAI | MapReduce | Spark</div>
   actions:
+    - text: Get Started
+      link: /components/
+      icon: right-arrow
+      variant: primary
     - text: My Portfolio
       link: https://pbthang.netlify.app/
       icon: external
-      variant: primary
-    # - text: My Portfolio
-    #   link: https://pbthang.netlify.app/
-    #   icon: external
-    #   variant: minimal
+      variant: minimal
 ---
 
 import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
