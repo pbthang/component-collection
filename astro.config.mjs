@@ -2,8 +2,9 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import tailwind from "@astrojs/tailwind";
 import liveCode from "astro-live-code";
-
 import react from "@astrojs/react";
+
+import netlify from "@astrojs/netlify";
 
 // https://astro.build/config
 export default defineConfig({
@@ -46,4 +47,8 @@ export default defineConfig({
     liveCode(),
     react(),
   ],
+  output: "server",
+  adapter: netlify({
+    edgeMiddleware: true,
+  }),
 });
