@@ -1,0 +1,68 @@
+<div class="h-96 relative rounded">
+  <!-- Floating 3D Object -->
+  <canvas id="hero-bg" class="!w-full !h-full rounded absolute top-0 left-0 z-0"></canvas>
+
+  <!-- Content -->
+  <div class="w-full h-full relative top-0 right-0 text-right flex flex-col items-end justify-center px-8 py-10 font-mono text-white">
+    <h1 class="!text-white">Lorem Ipsum Dolor</h1>
+    <p class="max-w-96">
+      Sed do eiusmod
+      tempor incididunt ut labore et dolore magna aliqua.
+    </p>
+    <button
+      class="bg-transparent border border-white text-white px-4 py-2 mt-4 rounded flex items-center gap-2 hover:bg-white hover:text-gray-900 cursor-pointer"
+    >
+      Learn More →
+    </button>
+  </div>
+</div>
+
+<script>
+  import * as THREE from 'three';
+  import { RoomEnvironment } from 'three/examples/jsm/Addons.js';
+  
+  const canvas = document.querySelector('#hero-bg') as HTMLCanvasElement;
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x1f2937);
+  
+  const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+  camera.position.z = 6;
+  
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    antialias: true,
+  });
+
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmremGenerator.fromScene(
+    new RoomEnvironment(),
+    0.04
+  ).texture;
+
+  const torus = new THREE.Mesh(
+    new THREE.TorusKnotGeometry(2, 0.7, 100, 16),
+    new THREE.MeshPhysicalMaterial({
+      color: 0x00b377,
+      roughness: 0.2,
+      metalness: 1,
+      iridescence: 1,
+      iridescenceIOR: 1.31,
+    })
+  );
+  torus.position.set(-4, 0, 0);
+  scene.add(torus);
+
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+  renderer.render(scene, camera);
+
+  function animate() {
+    requestAnimationFrame(animate);
+    torus.rotation.y += 0.004;
+    torus.rotation.z += 0.004;
+    renderer.render(scene, camera);
+  }
+
+  animate();
+</script>

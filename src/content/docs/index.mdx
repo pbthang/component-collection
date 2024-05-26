@@ -1,0 +1,32 @@
+---
+title: pbthang's collection
+description: My collection of reuseable code snippets and other useful stuff
+template: splash
+hero:
+  tagline: where I keep my reusable code snippets and other useful stuff
+  image:
+    file: ../../assets/houston.webp
+    # html: <div style="color:red">Hello</div>
+  actions:
+    - text: My Portfolio
+      link: https://pbthang.netlify.app/
+      icon: external
+      variant: primary
+    # - text: My Portfolio
+    #   link: https://pbthang.netlify.app/
+    #   icon: external
+    #   variant: minimal
+---
+
+import { Card, CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+## Next steps
+
+<CardGrid>
+  <LinkCard
+    title="Components"
+    href="/components/"
+    description="My collection of reuseable components using HTML, CSS, React, TailwindCSS, etc."
+  />
+  {/* <LinkCard title="Components" href="/guides/components/" /> */}
+</CardGrid>

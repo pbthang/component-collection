@@ -1,0 +1,129 @@
+---
+title: Floating 3D Objects
+description: Create floating 3D objects using HTML, TailwindCSS and Three.js.
+---
+
+Create floating 3D objects using HTML, TailwindCSS and Three.js.
+
+import { Steps, Code } from "@astrojs/starlight/components";
+
+## Demo
+
+import Floating3D from "../../../../components/hero/Floating3D.astro";
+import fullCode from "../../../../components/hero/Floating3D.astro?raw";
+
+<Floating3D />
+
+<Code
+  code={fullCode}
+  lang="html"
+  title="index.html"
+  showLineNumbers
+  collapse={["7-16"]}
+/>
+
+## Prerequisites
+
+[Three.js](https://threejs.org/) is required to use the code snippet above.
+
+## Steps
+
+<Steps>
+
+1. Inside the root `div`, create a `canvas` element for the 3d objects and a
+   `div` element for the content:
+
+   ```html showLineNumbers=false collapse={12-20}
+   <div class="h-96 relative rounded">
+     <!-- Floating 3D Object -->
+     <canvas
+       id="hero-bg"
+       class="!w-full !h-full rounded absolute top-0 left-0 z-0"
+     ></canvas>
+
+     <!-- Content -->
+     <div
+       class="w-full h-full relative top-0 right-0 text-right flex flex-col items-end justify-center px-8 py-10 font-mono text-white"
+     >
+       <h1 class="!text-white">Lorem Ipsum Dolor</h1>
+       <p class="max-w-96">
+         Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+       </p>
+       <button
+         class="bg-transparent border border-white text-white px-4 py-2 mt-4 rounded flex items-center gap-2 hover:bg-white hover:text-gray-900 cursor-pointer"
+       >
+         Learn More →
+       </button>
+     </div>
+   </div>
+   ```
+
+2. Create a script for the HTML and set up the scene, camera, renderer, and environment using `three.js`:
+
+   ```ts title="main.ts" showLineNumbers=false
+   import * as THREE from "three";
+   import { RoomEnvironment } from "three/examples/jsm/Addons.js";
+
+   const canvas = document.querySelector("#hero-bg") as HTMLCanvasElement;
+   const scene = new THREE.Scene();
+   scene.background = new THREE.Color(0x1f2937);
+
+   const camera = new THREE.PerspectiveCamera(
+     75, // field of view
+     canvas.clientWidth / canvas.clientHeight, // aspect ratio
+     0.1, // near clipping plane
+     1000 // far clipping plane
+   );
+   camera.position.z = 6;
+
+   const renderer = new THREE.WebGLRenderer({
+     canvas,
+     antialias: true, // to smooth the edges
+   });
+
+   const pmremGenerator = new THREE.PMREMGenerator(renderer);
+   scene.environment = pmremGenerator.fromScene(
+     new RoomEnvironment(), // or any other environment
+     0.04
+   ).texture;
+   ```
+
+3. Create a mesh for the 3D object and render it on the scene:
+
+   ```ts title="main.ts" showLineNumbers=false
+   const torus = new THREE.Mesh(
+     new THREE.TorusKnotGeometry(2, 0.7, 100, 16), // or any other geometry
+     new THREE.MeshPhysicalMaterial({
+       color: 0x00b377,
+       roughness: 0.2,
+       metalness: 1,
+       iridescence: 1,
+       iridescenceIOR: 1.31,
+     }) // or any other material
+   );
+   torus.position.set(-4, 0, 0);
+   scene.add(torus);
+
+   renderer.setPixelRatio(window.devicePixelRatio);
+   renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+   renderer.render(scene, camera); // render the scene
+   ```
+
+4. Add an animation loop to rotate the 3D object:
+
+   ```ts title="main.ts" showLineNumbers=false
+   function animate() {
+     requestAnimationFrame(animate);
+     // Rotate the torus
+     torus.rotation.y += 0.004;
+     torus.rotation.z += 0.004;
+     renderer.render(scene, camera);
+   }
+
+   animate();
+   ```
+
+5. You should now have a beautiful floating 3D object in your hero section. Feel free to customize the Mesh, Material and animation to suit your design.
+
+</Steps>

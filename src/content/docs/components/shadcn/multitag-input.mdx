@@ -1,0 +1,162 @@
+---
+title: Multi-tag Input
+description: Create a multi-tag input component using TailwindCSS and Shadcn/ui.
+---
+
+Create an input components for submitting multiple tags using Shadcn/ui form components.
+
+## Demo
+
+import { Image } from "astro:assets";
+import multitagDemo from "@/assets/multitagDemo.gif";
+
+<Image src={multitagDemo} alt="Multi-tag input component" class={"rounded"} />
+
+## Prerequisites
+
+[Shadcn/ui](https://ui.shadcn.com/), [lucide-react](https://lucide.dev/), [zod](https://zod.dev/),
+and [react-hook-form](https://react-hook-form.com/) are required to use the code snippet below.
+
+Make sure you add the required components to your project:
+
+```bash showLineNumbers=false
+npx shadcn-ui@latest add badge button form input label
+```
+
+## Code
+
+```tsx title="MultiTagInput.tsx" collapse={1-11}
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input, InputProps } from "@/components/ui/input";
+import { XIcon } from "lucide-react";
+import { Dispatch, SetStateAction, forwardRef, useState } from "react";
+
+type InputTagsProps = InputProps & {
+  value: string[];
+  onChange: Dispatch<SetStateAction<string[]>>;
+};
+
+export const InputTags = forwardRef<HTMLInputElement, InputTagsProps>(
+  ({ value, onChange, ...props }, ref) => {
+    const [pendingDataPoint, setPendingDataPoint] = useState("");
+
+    if (!value) {
+      value = [];
+    }
+
+    const addPendingDataPoint = () => {
+      if (pendingDataPoint) {
+        const newDataPoints = new Set([...value, pendingDataPoint]);
+        onChange(Array.from(newDataPoints));
+        setPendingDataPoint("");
+      }
+    };
+
+    return (
+      <>
+        <div className="flex">
+          <Input
+            value={pendingDataPoint}
+            onChange={(e) => setPendingDataPoint(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                addPendingDataPoint();
+              } else if (e.key === "," || e.key === " ") {
+                e.preventDefault();
+                addPendingDataPoint();
+              }
+            }}
+            className="rounded-r-none w-80"
+            {...props}
+            ref={ref}
+          />
+          <Button
+            type="button"
+            variant="secondary"
+            className="rounded-l-none border border-l-0"
+            onClick={addPendingDataPoint}
+          >
+            Add
+          </Button>
+        </div>
+        <div className="border rounded-md min-h-[2.5rem] overflow-y-auto p-2 flex gap-2 flex-wrap items-center">
+          {value.map((item, idx) => (
+            <Badge key={idx} variant="secondary">
+              {item}
+              <button
+                type="button"
+                className="w-3 ml-2"
+                onClick={() => {
+                  onChange(value.filter((i) => i !== item));
+                }}
+              >
+                <XIcon className="w-3" />
+              </button>
+            </Badge>
+          ))}
+        </div>
+      </>
+    );
+  }
+);
+```
+
+## Usage
+
+```tsx title="App.tsx" collapse={1-12}
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { InputTags } from "./MultiTagInput";
+
+// Define form schema
+const formSchema = z.object({
+  skills: z.array(z.string().trim()).max(20), // edit as needed
+});
+
+export default function App() {
+  // Initialize form
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      skills: [],
+    },
+  });
+
+  // Handle form submission
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    // Do something with the form values.
+    // ✅ This will be type-safe and validated.
+    console.log(data);
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="skills"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Skills</FormLabel>
+              <FormControl>
+                <InputTags {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
+  );
+}
+```
