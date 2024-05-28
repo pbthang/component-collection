@@ -1,0 +1,102 @@
+---
+title: Gradient Animated Text
+description: Create gradient animated text using HTML and TailwindCSS.
+---
+
+Create gradient animated text using HTML and TailwindCSS.
+
+## Demo
+
+import GradientText from "@/components/hero/GradientText.astro";
+import fullCode from "@/components/hero/GradientText.astro?raw";
+import { Code, Steps } from "@astrojs/starlight/components";
+
+<div className="rounded border border-gray-500 border-opacity-60">
+  <GradientText />
+</div>
+
+## Code
+
+<Code code={fullCode} lang="html" title="index.html" wrap />
+
+## Prerequisites
+
+[TailwindCSS](https://tailwindcss.com/) is required to use the code snippet above.
+
+## Steps
+
+<Steps>
+1. Create an `html` skeleton as follows:
+
+    ```html showLineNumbers=false wrap
+    <div class="w-full h-80 relative flex flex-col justify-center items-center">
+      <h1 class="!text-2xl md:!text-3xl !font-semibold text-center">
+        Lorem Ipsum Dolor Sit Amet
+      </h1>
+      <h1 class="!text-2xl md:!text-3xl !font-semibold text-center">
+        Consectetur
+        <!-- Gradient text -->
+        <span
+          class=""
+          id="gradient-text"
+        >
+          Adipiscing Elit Sed Do Eiusmod
+        </span>
+      </h1>
+      <button
+        class="rounded px-4 py-2 bg-transparent border-2 border-current !mt-6 cursor-pointer hover:bg-gray-700 hover:text-white"
+      >
+        Learn More →
+      </button>
+    </div>
+    ```
+
+2.  Choose your favorite gradient on [hypercolor.dev](https://hypercolor.dev/)
+    and update the `:before` pseudo-element in our gradient text `span`:
+
+    ```html showLineNumbers=false wrap ins="before:content-['Adipiscing_Elit_Sed_Do_Eiusmod'] before:absolute before:bg-clip-text before:text-transparent" ins="before:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] before:from-gray-300 before:via-fuchsia-600 before:to-orange-600"
+    <!-- Gradient text -->
+    <span
+      class="before:content-['Adipiscing_Elit_Sed_Do_Eiusmod'] before:absolute before:bg-clip-text before:text-transparent before:bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] before:from-gray-300 before:via-fuchsia-600 before:to-orange-600"
+      id="gradient-text"
+    >
+      Adipiscing Elit Sed Do Eiusmod
+    </span>
+    ```
+
+    Take note that the `content` property in the `:before` pseudo-element should
+    match the text content of the `span` element with spaces replaced by underscores.
+
+3.  Add the initial CSS styling for the gradient text:
+
+    ```css showLineNumbers=false wrap
+    #gradient-text {
+      --percent: 100%;
+    }
+    #gradient-text::before {
+      clip-path: inset(0 var(--percent) 0 0);
+    }
+    ```
+
+    This is done in CSS instead of TailwindCSS to avoid inital flickering during page load.
+    I haven't found a way to do this in TailwindCSS yet, so if you know how, please let me know!
+
+4.  Create a script to animate the gradient text on scrolling:
+
+    ```js showLineNumbers=false wrap
+    document.addEventListener("scroll", () => {
+      const delt_y = window.scrollY;
+      // percent should go from 100% to 0% as we scroll down
+      const MAX_SCROLL_INTERVAL = 300; // change this value to adjust the scroll interval
+      const percent =
+        100 - Math.max(0, Math.min(100, (delt_y / MAX_SCROLL_INTERVAL) * 100));
+
+      document
+        .querySelector("#gradient-text")
+        .style.setProperty("--percent", `${percent}%`);
+    });
+    ```
+
+5.  You should now have a eye-catching gradient animated text in your hero section.
+
+</Steps>

@@ -21,15 +21,11 @@
   </a>
 </div>
 
----
-
 ## 🤔 **About the project**
 
 <!-- ... [WHY DID YOU CREATED THIS PROJECT?, MOTIVATION, PURPOSE, DESCRIPTION, OBJECTIVES, etc] -->
 
 where I keep my reusable code snippets and other useful stuff
-
----
 
 <!--
 
@@ -44,8 +40,6 @@ where I keep my reusable code snippets and other useful stuff
 <!-- ... [SHOW HOW YOUR PROJECT IS USED] -->
 
 Visit the site, copy-paste the code snippets into your project and customize them as you wish.
-
----
 
 <!-- ## 🌲 **Project tree** -->
 
@@ -102,8 +96,6 @@ By donating, you will help the development of this project, and _you will be fea
 <!-- [![Sponsor](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=github-sponsors&color=red&style=social)](https://github.com/sponsors/pbthang) -->
 
 Enjoy! 😃
-
----
 
 ## ⚖️📝 **License and Changelog**
 
