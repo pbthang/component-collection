@@ -16,6 +16,7 @@ export default defineConfig({
         github: "https://github.com/pbthang",
         linkedin: "https://www.linkedin.com/in/pbthang/",
       },
+      favicon: "/favicon.svg",
       sidebar: [
         {
           label: "Components",
