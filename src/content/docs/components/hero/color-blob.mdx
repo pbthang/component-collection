@@ -7,32 +7,18 @@ Create a blurry color blob using HTML and TailwindCSS.
 
 ## Demo
 
-import { Steps } from "@astrojs/starlight/components";
+import { Steps, Code, Aside } from "@astrojs/starlight/components";
+import ColorBlob from "@/components/hero/ColorBlob.astro";
 
-```html live title="index.html" collapse={11-20}
-<div class="w-full h-80 relative">
-  <!-- Color blob -->
-  <div class="h-48 w-80 blur-3xl absolute top-0 left-0">
-    <div
-      class="h-full w-full opacity-60 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 [clip-path:polygon(61%_100%,92%_100%,100%_0,0_74%,20%_0)]"
-    ></div>
-  </div>
-
-  <!-- Content -->
-  <div class="w-96 relative top-0 right-0 text-right flex flex-col items-end">
-    <h1>Lorem Ipsum Dolor</h1>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
-      tempor incididunt ut labore et dolore magna aliqua.
-    </p>
-    <button
-      class="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition"
-    >
-      Learn More →
-    </button>
-  </div>
+<div className="rounded border border-gray-500 border-opacity-60">
+  <ColorBlob />
 </div>
-```
+
+## Code
+
+import fullCode from "@/components/hero/ColorBlob.astro?raw";
+
+<Code code={fullCode} lang="html" title="index.html" collapse={"11-20"} />
 
 ## Prerequisites
 
@@ -44,23 +30,23 @@ import { Steps } from "@astrojs/starlight/components";
 1. Inside the root `div`, create a nested `div` element for the color blob and a `div` element for the content:
     
     ```html collapse={9-18} showLineNumbers=false
-    <div class="w-full h-80 relative">
+    <div class="w-full h-80 relative p-6">
       <!-- Color blob -->
       <div class="h-48 w-80 absolute top-0 left-0">
         <div class="h-full w-full" id="blob-shape"></div>
       </div>
       
       <!-- Content -->
-      <div class="w-96 relative top-0 right-0 text-right flex flex-col items-end">
+      <div class="w-full text-right flex flex-col items-end relative z-10">
         <h1>Lorem Ipsum Dolor</h1>
-        <p>
+        <p class="text-balance">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod
           tempor incididunt ut labore et dolore magna aliqua.
         </p>
         <button
           class="bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer hover:bg-blue-700 transition"
         >
-          Learn More
+          Learn More →
         </button>
       </div>
     </div>
@@ -77,19 +63,22 @@ import { Steps } from "@astrojs/starlight/components";
 
 3.  Visit [Clippy](https://bennettfeely.com/clippy/) or any equivalent tool to generate a clip-path polygon. For example, `polygon(61% 100%, 92% 100%, 100% 0, 0 74%, 20% 0)`. Update the blob shape with the clip-path:
 
-    ```html ins="[clip-path:polygon(61%_100%,92%_100%,100%_0,0_74%,20%_0)]" showLineNumbers=false
+    ```html ins="[clip-path:polygon(61%_100%,92%_100%,100%_0,0_74%,20%_0)]" showLineNumbers=false wrap
     <div
       class="h-full w-full bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 [clip-path:polygon(61%_100%,92%_100%,100%_0,0_74%,20%_0)]"
       id="blob-shape"
     ></div>
     ```
 
-    Please note that the clip-path syntax is slightly different in TailwindCSS.
-    Replace the spaces with underscores `_` in the clip-path values.
+    <Aside>
+      Please note that the clip-path syntax is slightly different in
+      TailwindCSS. Replace the spaces with underscores `_` in the clip-path
+      values.
+    </Aside>
 
 4.  Lower the opacity of the blob shape and add a blur effect to the blob wrapper to create a blurry color blob:
 
-    ```html ins="blur-3xl" ins="opacity-60" showLineNumbers=false
+    ```html ins="blur-3xl" ins="opacity-60" showLineNumbers=false wrap
     <div class="h-48 w-80 blur-3xl absolute top-0 left-0">
       <div
         class="h-full w-full opacity-60 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 [clip-path:polygon(61%_100%,92%_100%,100%_0,0_74%,20%_0)]"
