@@ -3,8 +3,9 @@ import starlight from "@astrojs/starlight";
 import tailwind from "@astrojs/tailwind";
 import liveCode from "astro-live-code";
 import react from "@astrojs/react";
-
 import netlify from "@astrojs/netlify";
+
+import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,6 +18,15 @@ export default defineConfig({
         linkedin: "https://www.linkedin.com/in/pbthang/",
       },
       favicon: "/favicon.svg",
+      head: [
+        {
+          tag: "link",
+          attrs: {
+            rel: "sitemap",
+            href: "/sitemap-index.xml",
+          },
+        },
+      ],
       sidebar: [
         {
           label: "Components",
@@ -47,7 +57,9 @@ export default defineConfig({
     }),
     liveCode(),
     react(),
+    sitemap(),
   ],
+  site: "https://pbthang-collection.netlify.app/",
   output: "server",
   adapter: netlify({
     edgeMiddleware: true,
