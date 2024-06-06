@@ -1,0 +1,108 @@
+---
+title: Array Rotation Loader
+description: Create a "array rotation" loading animation using HTML, TailwindCSS, and CSS.
+---
+
+Create an "array rotation" loading animation using HTML, TailwindCSS, and CSS.
+
+## Demo
+
+import { Steps, Code, Aside } from "@astrojs/starlight/components";
+import ArrayRotationLoader from "@/components/loader/ArrayRotationLoader.astro";
+
+<div className="rounded border border-gray-500 border-opacity-60 flex justify-center items-center h-64">
+  <ArrayRotationLoader />
+</div>
+
+## Code
+
+import fullCode from "@/components/loader/ArrayRotationLoader.astro?raw";
+
+<Code code={fullCode} lang="html" title="index.html" />
+
+## Prerequisites
+
+[TailwindCSS](https://tailwindcss.com/) is required to use the code snippet above.
+
+## Steps
+
+<Steps>
+
+1. Create an `html` skeleton as follows:
+
+   ```html showLineNumbers=false wrap
+   <div>
+     <div class="loader relative flex gap-[8px] translate-x-[-9px]">
+       <!-- Each span represents a dot -->
+       <span class="block w-[10px] h-[10px] bg-current rounded-full"></span>
+       <span class="block w-[10px] h-[10px] bg-current rounded-full"></span>
+       <span class="block w-[10px] h-[10px] bg-current rounded-full"></span>
+       <span class="block w-[10px] h-[10px] bg-current rounded-full"></span>
+       <span class="block w-[10px] h-[10px] bg-current rounded-full"></span>
+     </div>
+     <div class="">Loading...</div>
+   </div>
+   ```
+
+2. Create the following keyframes to animate the dots:
+
+   ```css showLineNumbers=false wrap
+   @keyframes move {
+     0% {
+       transform: translateX(0);
+     }
+     100% {
+       transform: translateX(19px);
+     }
+   }
+
+   @keyframes jump {
+     0% {
+       transform: translate(0, 0);
+     }
+     30% {
+       transform: translate(0px, -30px);
+     }
+     70% {
+       transform: translate(-72px, -30px);
+     }
+     100% {
+       transform: translate(-72px, 0px);
+     }
+   }
+   ```
+
+   `move` keyframes will move a dot to the right, and `jump` keyframes will make a dot jump to the front.
+
+3. Add the animation to the dots:
+
+   ```html showLineNumbers=false wrap ins="animate-[move_1s_linear_infinite]" ins="animate-[jump_1s_ease_infinite]"
+   <!-- Each span represents a dot -->
+   <span
+     class="block w-[10px] h-[10px] bg-current rounded-full animate-[move_1s_linear_infinite]"
+   >
+   </span>
+   <span
+     class="block w-[10px] h-[10px] bg-current rounded-full animate-[move_1s_linear_infinite]"
+   >
+   </span>
+   <span
+     class="block w-[10px] h-[10px] bg-current rounded-full animate-[move_1s_linear_infinite]"
+   >
+   </span>
+   <span
+     class="block w-[10px] h-[10px] bg-current rounded-full animate-[move_1s_linear_infinite]"
+   >
+   </span>
+   <span
+     class="block w-[10px] h-[10px] bg-current rounded-full animate-[jump_1s_ease_infinite]"
+   >
+   </span>
+   ```
+
+   Please note that the first four dots will have the `move` animation with a linear timing function,
+   and the last dot will have the `jump` animation with an ease timing function.
+
+4. You should now have a "array rotation" loading animation.
+
+</Steps>

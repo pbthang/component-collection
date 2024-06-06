@@ -43,6 +43,12 @@ export default defineConfig({
               },
             },
             {
+              label: "Loader",
+              autogenerate: {
+                directory: "/components/loader",
+              },
+            },
+            {
               label: "Shadcn/ui",
               autogenerate: {
                 directory: "/components/shadcn",

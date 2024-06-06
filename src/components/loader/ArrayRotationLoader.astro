@@ -1,0 +1,36 @@
+<div>
+  <div class="loader relative flex gap-[8px] translate-x-[-9px]">
+    <span class="block w-[10px] h-[10px] bg-current rounded-full animate-[move_1s_linear_infinite]"></span>
+    <span class="block w-[10px] h-[10px] bg-current rounded-full animate-[move_1s_linear_infinite]"></span>
+    <span class="block w-[10px] h-[10px] bg-current rounded-full animate-[move_1s_linear_infinite]"></span>
+    <span class="block w-[10px] h-[10px] bg-current rounded-full animate-[move_1s_linear_infinite]"></span>
+    <span class="block w-[10px] h-[10px] bg-current rounded-full animate-[jump_1s_ease_infinite]"></span>
+  </div>
+  <div class="">Loading...</div>
+</div>
+
+<style>
+  @keyframes move {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(19px);
+    }
+  }
+
+  @keyframes jump {
+    0% {
+      transform: translate(0, 0);
+    }
+    30% {
+      transform: translate(0px, -30px);
+    }
+    70% {
+      transform: translate(-72px, -30px);
+    }
+    100% {
+      transform: translate(-72px, 0px);
+    }
+  }
+</style>
