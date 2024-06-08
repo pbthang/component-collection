@@ -1,0 +1,232 @@
+---
+title: "L2: Processes, Threads and Synchronization"
+---
+
+## Processes & Threads
+
+### Process
+
+import { Image } from "astro:assets";
+import processMemory from "./l2-processes-threads-and-synchronization/untitled.png";
+
+<figure class="mx-auto w-[580px]">
+  <Image src={processMemory} alt="Memory of a process" />
+  <figcaption class="text-center text-sm !mt-0">Memory of a process</figcaption>
+</figure>
+
+A program in execution, identified by PID
+
+- Comprises: executable program (PC), global data (OS resources: open files, network connections), stack or heap, and current values of the registers (GPRs and Special)
+- Own address space: exclusive access to its data
+- Two or more processes exchange data → need explicit communication
+
+**Multi-programming (Multitasking):**
+
+import processStateGraph from "./l2-processes-threads-and-synchronization/untitled-1.png";
+
+<figure class="mx-auto w-[480px]">
+  <Image src={processStateGraph} alt="Process State Graph" />
+  <figcaption class="text-center text-sm !mt-0">Process State Graph</figcaption>
+</figure>
+
+- Several processes at different stages of execution
+  - Need context switch
+  - States of the suspended process must be saved → overhead
+- 2 types of execution:
+  - **Time slicing** execution → pseudo-parallelism
+  - **Parallel execution** of processes on different resources
+
+IPC: Cooperating processes have to share information
+
+- Shared memory → Need to protect access when reading/writing with locks
+- Message passing: Blocking & non-blocking, Synchronous & asynchronous
+- Unix specific: Pipes & Signal
+
+**Exceptions:**
+
+- Executing a machine level instruction can cause exception
+- E.g: Overflow, Underflow, Division by Zero, Illegal memory address, Misaligned memory access
+- **Synchronous**: Occur due to program execution
+- Have to execute an **exception handler**
+
+**Interrupts:**
+
+- External events can interrupt the execution of a program
+- Usually hardware related: Timer, Mouse Movement, Keyboard Pressed, etc
+- **Asynchronous**: Occur independently of program execution
+- Have to execute an **interrupt handler**
+
+Disadvantages:
+
+- Creating a new process is costly
+  - Overhead of system calls
+  - All data structures must be allocated, initialized and copied
+- Communicating between processes costly → Go through the OS
+
+### Thread
+
+- Extension of process model:
+  - A process may consist of multiple independent control flows called threads
+  - The thread defines a sequential execution stream within a process(PC, SP, registers)
+- Threads share the address space of the process:
+  - All threads belonging to the same process see the same value
+  - shared-memory architecture
+- Thread generation is faster than process generation: No copy of the address space is necessary
+- Different threads of a process can be assigned run on different cores of a multicore processor
+- 2 types: User-level threads, Kernel threads
+
+**User-level threads:**
+
+- Managed by a thread library – OS unaware of user-level threads so no OS support
+- **Advantages**: switching thread context is fast
+- **Disadvantages**
+  - OS cannot map different threads of the same process to different execution resources → no parallelism
+  - OS cannot switch to another thread if one thread executes a blocking I/O operation
+
+**Kernel threads:**
+
+- OS is aware of the existence of threads and can react correspondingly
+- Avoid disadvantages of user-level threads
+- Efficient use of the cores in a multicore system
+
+import manyToOneMapping from "./l2-processes-threads-and-synchronization/untitled-2.png";
+
+<figure class="mx-auto w-[480px]">
+  <Image src={manyToOneMapping} alt="many-to-one mapping" />
+  <figcaption class="text-center text-sm !mt-0">many-to-one mapping</figcaption>
+</figure>
+
+import oneToOneMapping from "./l2-processes-threads-and-synchronization/untitled-3.png";
+
+<figure class="mx-auto w-[480px]">
+  <Image src={oneToOneMapping} alt="one-to-one mapping" />
+  <figcaption class="text-center text-sm !mt-0">one-to-one mapping</figcaption>
+</figure>
+
+import manyToManyMapping from "./l2-processes-threads-and-synchronization/untitled-4.png";
+
+<figure class="mx-auto w-[480px]">
+  <Image src={manyToManyMapping} alt="many-to-many mapping" />
+  <figcaption class="text-center text-sm !mt-0">
+    many-to-many mapping
+  </figcaption>
+</figure>
+
+:::note
+💡 **Global variables** of a program and all **dynamically allocated data objects** are **shared** among threads.
+Each thread has a **private runtime stack** for function stack frames.
+Runtime stack of a thread exists iff the thread is active.
+:::
+
+## Synchronization
+
+### Synchronization mechanisms
+
+Lock:
+
+- `acquire()` and `release()`
+- Locks can spin (a **spinlock**) or block (a **mutex**)
+
+Semaphores
+
+- `Semaphore::Wait()`: decrement (also `P()`)
+- `Semaphore::Signal()`: increment, (also `V()`)
+- Semaphore value is always greater than or equal to 0
+- **Mutex** **semaphore** (or binary semaphore): count = 1
+- **Counting** **semaphore** (or general semaphore): count = N
+
+Barrier:
+
+### Synchronization problems
+
+Deadlock: exist if and only if the following four conditions hold simultaneously:
+
+1. **Mutual exclusion** – At least one resource must be held in a non-sharable mode
+2. **Hold and wait** – There must be one process holding one resource and waiting for another resource
+3. **No pre-emption** – Resources cannot be pre-empted (critical sections cannot be aborted externally)
+4. **Circular wait** – There must exist a set of processes \[P1, P2, P3,...,Pn] such that P1 is waiting for P2, P2 for P3, etc
+
+Starvation: side effect of the scheduling algorithm
+
+- A high priority process always prevents a low priority process from running on the CPU
+- One thread always beats another when acquiring a lock
+
+Livelock:
+
+### **Classic Synchronization Problems**
+
+Producer-consumer:
+
+- `mutex = Semaphore(1)`; `items = Semaphore(0)`
+
+```python title="Producer"
+event = waitForEvent()
+mutex.wait()
+
+buffer.add(event)
+
+items.signal()
+mutex.signal()
+```
+
+```python title="Consumer"
+items.wait()
+mutex.wait()
+
+event = buffer.get()
+
+mutex.signal()
+event.process()
+```
+
+Producer-consumer with Finite Buffer:
+
+```python title="Producer"
+event = waitForEvent()
+spaces.wait()
+mutex.wait()
+
+buffer.add ( event )
+
+mutex.signal ()
+items.signal ()
+```
+
+```python title="Consumer"
+items.wait()
+mutex.wait()
+
+event = buffer.get()
+
+mutex.signal()
+spaces.signal()
+event.process()
+```
+
+Readers-writers Problem:
+
+- Any number of readers can be in the critical section simultaneously
+- Writers must have exclusive access to the critical section
+- `int readers = 0`, `mutex = Semaphore (1)`, `roomEmpty = Semaphore (1)`
+
+```python title="Writer"
+roomEmpty.wait()
+# critical section for writers
+roomEmpty.signal()
+```
+
+```python title="Readers"
+mutex.wait ()
+readers += 1
+if readers == 1:
+  roomEmpty.wait () # first in locks
+
+mutex.signal ()
+# critical section for readers
+mutex.wait ()
+
+readers -= 1
+if readers == 0:
+  roomEmpty.signal () # last out unlocks
+mutex.signal ()
+```
