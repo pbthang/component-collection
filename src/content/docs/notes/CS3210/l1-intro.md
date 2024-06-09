@@ -1,5 +1,7 @@
 ---
 title: "L1: Introduction to Parallel Computing"
+sidebar:
+  order: 1
 ---
 
 ## Course objectives

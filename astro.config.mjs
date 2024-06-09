@@ -91,9 +91,30 @@ export default defineConfig({
         {
           label: "Notes",
           collapsed: true,
-          autogenerate: {
-            directory: "/notes",
-          },
+          items: [
+            {
+              label: "Overview",
+              link: "/notes",
+            },
+            {
+              label: "CS2102 Database Systems",
+              autogenerate: {
+                directory: "/notes/cs2102",
+              },
+            },
+            {
+              label: "CS3210 Parallel Computing",
+              autogenerate: {
+                directory: "/notes/cs3210",
+              },
+            },
+            {
+              label: "CS5224 Cloud Computing",
+              autogenerate: {
+                directory: "/notes/cs5224",
+              },
+            },
+          ],
         },
       ],
       editLink: {
