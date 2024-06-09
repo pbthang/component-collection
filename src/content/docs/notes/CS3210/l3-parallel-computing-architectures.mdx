@@ -1,6 +1,7 @@
 ---
 title: "L3: Parallel Computing Architectures"
-generated: 1717747717970
+sidebar:
+  order: 3
 ---
 
 ## **Source of Processor Performance Gain**
@@ -239,42 +240,42 @@ import intelCoreI7 from "./l3-parallel-computing-architectures/untitled-16.png";
 - Program is unaware of the actual hardware memory architecture
   - Cache coherence and memory consistency
 
-Cache Coherence:
+**Cache Coherence:**
 
 - Multiple copies of the same data exist on different caches
 - Local update by processor → Other processors should not see the unchanged data
 
 ![Untitled](./l3-parallel-computing-architectures/untitled-17.png)
 
-Memory Consistency:
+**Memory Consistency:**
 
 ![Untitled](./l3-parallel-computing-architectures/untitled-18.png)
 
-Uniform Memory Access (Time) (UMA):
+**Uniform Memory Access (Time) (UMA):**
 
 - Latency of accessing the main memory is the same for every processor
 - Suitable for small number of processors – due to **contention**
 
 ![Untitled](./l3-parallel-computing-architectures/untitled-19.png)
 
+**Non-Uniform Memory Access (NUMA):**
+
 ![Untitled](./l3-parallel-computing-architectures/untitled-20.png)
 
 import modernMultiSocketConfig from "./l3-parallel-computing-architectures/untitled-21.png";
 
-<figure class="mx-auto w-[480px]">
+<figure class="mx-auto w-[360px]">
   <Image src={modernMultiSocketConfig} alt="Modern multi-socket config" />
   <figcaption class="text-center text-sm !mt-0">
     Modern multi-socket config
   </figcaption>
 </figure>
 
-Non-Uniform Memory Access (NUMA):
-
 - Physically distributed memory of all processing elements are combined to form a global shared-memory address space
   - also called distributed shared-memory
 - Accessing local memory is faster than remote memory for a processor
 
-ccNUMA:
+**ccNUMA:**
 
 - Cache Coherent Non-Uniform Memory Access
   - Each node has cache memory to reduce contention
@@ -283,7 +284,7 @@ ccNUMA:
 
 ![Untitled](./l3-parallel-computing-architectures/untitled-23.png)
 
-COMA:
+**COMA:**
 
 - Cache Only Memory Architecture
   - Each memory block works as cache memory
