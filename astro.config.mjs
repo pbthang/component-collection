@@ -90,7 +90,6 @@ export default defineConfig({
         },
         {
           label: "Notes",
-          collapsed: true,
           items: [
             {
               label: "Overview",
