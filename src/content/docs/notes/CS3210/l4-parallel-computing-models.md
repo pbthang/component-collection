@@ -1,6 +1,5 @@
 ---
 title: "L4: Parallel Computing Models"
-generated: 1717747726188
 ---
 
 ## Parallelism

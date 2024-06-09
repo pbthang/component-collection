@@ -1,6 +1,5 @@
 ---
 title: "L7: Cache Coherence + Memory Consistency"
-generated: 1717747757232
 ---
 
 ## Cache Coherence

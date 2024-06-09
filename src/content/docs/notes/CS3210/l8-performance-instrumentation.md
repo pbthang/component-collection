@@ -1,6 +1,5 @@
 ---
 title: "L8: Performance Instrumentation"
-generated: 1717747767573
 ---
 
 Aspects:
