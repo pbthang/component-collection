@@ -3,13 +3,13 @@ title: Midterm notes
 generated: 1717918999985
 ---
 
-# Introduction
+## Introduction
 
-## Storage hierarchy
+### Storage hierarchy
 
 ![Untitled](./midterm-notes/untitled.png)
 
-## Bandwidth vs Latency
+### Bandwidth vs Latency
 
 **Bandwidth**: maximum amount of data that can be transmitted per unit time (e.g. in GB/s)
 
@@ -18,7 +18,7 @@ generated: 1717918999985
 When transmitting a large amount of data, **bandwidth** tells us roughly how long the transmission will take. When transmitting a very small amount of data, **latency** tells us how much delay there will be.
 **Throughput** is similar to bandwidth, but instead of referring to capacity, it refers to the rate at which some data was actually transmitted across the network during some period of time.
 
-## “Big Ideas” of Massive Data Processing in Data Centers
+### “Big Ideas” of Massive Data Processing in Data Centers
 
 Scale “out”, not “up”:
 
@@ -37,7 +37,7 @@ Seamless scalability:
 - E.g. if processing a certain dataset takes 100 machine hours, ideal
   scalability is to use a cluster of 10 machines to do it in about 10 hours.
 
-# MapReduce
+## MapReduce
 
 ![Untitled](./midterm-notes/untitled-1.png)
 
@@ -54,7 +54,7 @@ The execution framework handles the challenging issues...
 - How do we aggregate partial results?
 - How do we know all the workers have finished? l What if workers die/fail?
 
-## MapReduce implementation
+### MapReduce implementation
 
 ![Untitled](./midterm-notes/untitled-2.png)
 
@@ -72,13 +72,13 @@ Keys arrive at each reducer in sorted order. No enforced ordering across reducer
 
 Usually, programmers optionally also specify `partition` and `combine` functions. These are an optional optimization to reduce network traffic.
 
-## Partition step
+### Partition step
 
 By default, the assignment of keys to reducers is determined by a hash function, e.g., key `k` goes to reducer `(hash(k) mod num_reducers)`
 
 Users can optionally implement a custom partition, e.g. to better spread out the load among reducers (if some keys have much more values than others)
 
-## Combiner step
+### Combiner step
 
 ![Untitled](./midterm-notes/untitled-3.png)
 
@@ -95,7 +95,7 @@ In general, it is correct to use reducers as combiners if the reduction involves
 - **Associative:** a+(b+c)=(a+b)+c
 - **Commutative:** a+b=b+a
 
-## Example
+### Example
 
 ![Untitled](./midterm-notes/untitled-4.png)
 
@@ -105,11 +105,11 @@ This mapper uses a hash table (“counts”) to maintain the words and counts pe
 
 ![Untitled](./midterm-notes/untitled-6.png)
 
-## **Preserving State in Mappers / Reducers**
+### **Preserving State in Mappers / Reducers**
 
 ![Untitled](./midterm-notes/untitled-7.png)
 
-## Secondary sort
+### Secondary sort
 
 **Problem**: each reducer’s values arrive unsorted. But what if we want them to be sorted (e.g. sorted by temperature)?
 
@@ -121,7 +121,7 @@ This mapper uses a hash table (“counts”) to maintain the words and counts pe
 
 ![Untitled](./midterm-notes/untitled-9.png)
 
-## Performance Guidelines for Basic Algorithmic Design
+### Performance Guidelines for Basic Algorithmic Design
 
 1. Linear scalability: more nodes can do more work at the same time
    - Linear on data size
@@ -134,7 +134,7 @@ This mapper uses a hash table (“counts”) to maintain the words and counts pe
 
 Guidelines are applicable to Hadoop, Spark, ...
 
-# Hadoop File System
+## Hadoop File System
 
 Don’t move data to workers... move workers to the data!
 
@@ -146,7 +146,7 @@ A distributed file system is the answer
 - GFS (Google File System) for Google’s MapReduce
 - HDFS (Hadoop Distributed File System) for Hadoop
 
-## GFS/HDFS assumptions
+### GFS/HDFS assumptions
 
 Commodity hardware instead of “exotic” hardware → Scale “out”, not “up”
 
@@ -158,7 +158,7 @@ Files are write-once, mostly appended to
 
 Large streaming reads instead of random access → High sustained throughput over low latency
 
-## Design decisions
+### Design decisions
 
 Files stored as chunks → Fixed size (64MB for GFS, 128MB for HDFS)
 
@@ -166,7 +166,7 @@ Reliability through replication → Each chunk replicated across 3+ chunk server
 
 Single master to coordinate access, and keep metadata → Simple centralized management
 
-## HDFS Architeccture
+### HDFS Architeccture
 
 ![Untitled](./midterm-notes/untitled-10.png)
 
@@ -174,7 +174,7 @@ How to perform replication when writing data?
 
 - Namenode decides which datanodes are to be used as replicas. The 1st datanode forwards data blocks to the 1st replica, which forwards them to the 2nd replica, and so on.
 
-## Namenode responsibility
+### Namenode responsibility
 
 Managing the file system namespace:
 
@@ -195,9 +195,9 @@ What if the namenode’s data is lost?
 
 ![Untitled](./midterm-notes/untitled-11.png)
 
-# MapReduce and relational database
+## MapReduce and relational database
 
-## Projection in MapReduce
+### Projection in MapReduce
 
 ![Untitled](./midterm-notes/untitled-12.png)
 
@@ -205,7 +205,7 @@ What if the namenode’s data is lost?
 
 No reducer needed (⇒ no need shuffle step)
 
-## Selection in MapReduce
+### Selection in MapReduce
 
 ![Untitled](./midterm-notes/untitled-13.png)
 
@@ -213,7 +213,7 @@ No reducer needed (⇒ no need shuffle step)
 
 No reducer needed
 
-## Aggregation `GROUP BY`
+### Aggregation `GROUP BY`
 
 Example: What is the average sale price per product?
 
@@ -226,9 +226,9 @@ In MapReduce:
 - Compute average in reducer
 - Optimize with combiners
 
-## Inner join
+### Inner join
 
-### Method 1: Broadcast join
+#### Method 1: Broadcast join
 
 ![Untitled](./midterm-notes/untitled-14.png)
 
@@ -237,7 +237,7 @@ Requires one of the tables to fit in memory
 - All mappers store a copy of the small table (for efficiency: we convert it to a hash table, with keys as the keys we want to join by)
 - They iterate over the big table, and join the records with the small table
 
-### Method 2: Reduce-side (’Common’) join
+#### Method 2: Reduce-side (’Common’) join
 
 ![Untitled](./midterm-notes/untitled-15.png)
 
@@ -252,7 +252,7 @@ keys from table X arrive before table Y
 
 - Then, hold the keys from table X in memory and cross them with records from table Y
 
-# Similarity search
+## Similarity search
 
 Euclidean distance, Manhattan distance
 
@@ -262,7 +262,7 @@ Jaccard similarity: $s_{Jaccared}(A, B) = \frac{|A\cap B|}{|A\cup B|}$
 
 Jaccard distance: $d_{Jaccard} = 1 - s_{Jaccard}$
 
-## **Finding Similar Documents**
+### **Finding Similar Documents**
 
 All pairs similarity: Given a large number N of documents, find all “near duplicate” pairs, e.g. with Jaccard distance below a threshold
 Similarity search: Given a query document D, find all documents which are “near duplicates” with D
@@ -277,7 +277,7 @@ Similarity search: Given a query document D, find all documents which are “nea
 
 ![Untitled](./midterm-notes/untitled-17.png)
 
-## MinHashing
+### MinHashing
 
 Hash each column C to a small signature h(C), such that:
 
@@ -299,7 +299,7 @@ $$
 
 **Extension to multiple hashes:** in practice, we usually use multiple hash functions (e.g. N=100), and generate N signatures for each document. “Candidate pairs” can be defined as those matching a ‘sufficient number’ (e.g. at least 50) among these signatures.
 
-## MapReduce Implementation
+### MapReduce Implementation
 
 Map:
 
@@ -313,9 +313,9 @@ Reduce:
 - Generate all candidate pairs from these documents
 - (Optional): compare each such pair to check if they are actually similar
 
-# Clustering
+## Clustering
 
-## K-Means Algorithm
+### K-Means Algorithm
 
 1. Initialization: Pick K random points as centers
 2. Repeat:
@@ -323,15 +323,15 @@ Reduce:
    2. Update: move each cluster center to average of its assigned points
       Stop if no assignments change
 
-## MapReduce implementation v1
+### MapReduce implementation v1
 
 ![Untitled](./midterm-notes/untitled-18.png)
 
-## MapReduce implementation v2 (with in-mapper combiner)
+### MapReduce implementation v2 (with in-mapper combiner)
 
 ![Untitled](./midterm-notes/untitled-19.png)
 
-# NoSQL
+## NoSQL
 
 Not Only SQL
 
@@ -340,7 +340,7 @@ Not Only SQL
 - Wide column databases: Cassandra
 - Graph databases: Neo4j
 
-## Key-value stores
+### Key-value stores
 
 Stores associations between keys and values
 Keys are usually primitives and can be queried
@@ -359,7 +359,7 @@ Persistent: Data is stored persistently to disk
 
 - Examples: RocksDB, Dynamo, Riak
 
-## Document stores
+### Document stores
 
 A database can have multiple collections
 
@@ -372,7 +372,7 @@ A document is a JSON-like object: it has fields and values
 
 Unlike (basic) key value stores, document stores allow some querying based on the content of a document
 
-## Wide column stores
+### Wide column stores
 
 Rows describe entities
 
@@ -382,7 +382,7 @@ Sparsity: if a column is not used for a row, it doesn’t use space
 
 Examples: BigTable, Cassandra, HBase
 
-## **Strong vs Eventual Consistency**
+### **Strong vs Eventual Consistency**
 
 ![Untitled](./midterm-notes/untitled-20.png)
 
@@ -396,7 +396,7 @@ ACID vs BASE: Relational DBMS provide stronger (ACID) guarantees, but many NoSQL
 
 - Note that while NoSQL systems allow for weaker consistency guarantees, many more recent systems / versions are often configurable, i.e. can be configured for multiple different consistency levels (including strong) – ‘tunable consistency’
 
-## Pros and cons of NoSQL Systems
+### Pros and cons of NoSQL Systems
 
 Pros:
 
@@ -409,19 +409,19 @@ Cons:
 - No declarative query language: query logic (e.g. joins) may have to be handled on the application side, which can add additional programming
 - Weaker consistency guarantees: application may receive stale data that may need to be handled on the application side
 
-# NoSQL and Basics of Distributed Databases
+## NoSQL and Basics of Distributed Databases
 
-## Distributed Database Architectures
+### Distributed Database Architectures
 
 ![Untitled](./midterm-notes/untitled-21.png)
 
-## Table partitioning
+### Table partitioning
 
 Put different tables (or collections) on different machines
 
 **Problem**: scalability – each table cannot be split across multiple machines
 
-## Horizontal Partitioning (Sharding)
+### Horizontal Partitioning (Sharding)
 
 Different tuples are stored in different nodes
 
@@ -434,7 +434,7 @@ Imagine using each user’s city, `city_id` as a partition key; when is this goo
 
 - good if we mostly aggregate data only within individual cities. Bad if there are too few cities (or cities are very imbalanced) and this causes a lack of scalability.
 
-### Range partition
+#### Range partition
 
 Split partition key based on range of values
 
@@ -442,7 +442,7 @@ Split partition key based on range of values
 - But: range partitioning can lead to imbalanced shards, e.g. if many rows have `user_id = 0`
 - Splitting the range is automatically handled by a balancer (it tries to keep the shards balanced)
 
-### Hash partition
+#### Hash partition
 
 Hash partition key, then divide that into partitions based on ranges
 
@@ -452,7 +452,7 @@ In previous approaches, how to add / remove a node? If we completely redo the pa
 
 - Answer: consistent hashing
 
-### Consistent hashing
+#### Consistent hashing
 
 Think of the output of the hash function as lying on a circle:
 
@@ -474,9 +474,9 @@ Similarly, nodes can be added by splitting the largest current node into two
 
 Benefit: when we remove a node (e.g. node 1), its tuples will not allbe reassigned to the same node. So, this can balance load better.
 
-# Query processing in NoSQL
+## Query processing in NoSQL
 
-## Architecture of MongoDB
+### Architecture of MongoDB
 
 ![Untitled](./midterm-notes/untitled-24.png)
 
@@ -486,7 +486,7 @@ Benefit: when we remove a node (e.g. node 1), its tuples will not allbe reassign
 
 **Shards:** store data, and run queries on their data
 
-### Example of Read or Write Query
+#### Example of Read or Write Query
 
 ![Untitled](./midterm-notes/untitled-25.png)
 
@@ -496,7 +496,7 @@ Benefit: when we remove a node (e.g. node 1), its tuples will not allbe reassign
 4. Shards run query on their data, and send results back to mongos
 5. mongos merges the query results and returns the merged results
 
-## Reasons for Scalability & Performance of NoSQL
+### Reasons for Scalability & Performance of NoSQL
 
 **Horizontal partitioning:** as we get more and more data, we can simply partition it into more and more shards (even if individual tables become very large)
 

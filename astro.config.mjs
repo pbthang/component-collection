@@ -92,6 +92,7 @@ export default defineConfig({
           label: "Notes",
           autogenerate: {
             directory: "/notes",
+            collapsed: true,
           },
         },
       ],
