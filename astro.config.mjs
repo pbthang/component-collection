@@ -97,8 +97,7 @@ export default defineConfig({
         },
       ],
       editLink: {
-        baseUrl:
-          "https://github.com/pbthang/component-collection/edit/edit-page",
+        baseUrl: "https://github.com/pbthang/component-collection/edit/main",
       },
       customCss: ["./src/tailwind.css"],
       plugins: [starlightImageZoom()],
